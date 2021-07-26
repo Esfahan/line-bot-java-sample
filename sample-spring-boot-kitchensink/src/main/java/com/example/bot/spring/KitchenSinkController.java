@@ -34,6 +34,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
+import com.example.bot.spring.services.TextMessageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -112,10 +113,36 @@ public class KitchenSinkController {
     @Autowired
     private LineBlobClient lineBlobClient;
 
+    @Autowired
+    private TextMessageService textMessageService;
+
     @EventMapping
     public void handleTextMessageEvent(MessageEvent<TextMessageContent> event) throws Exception {
         TextMessageContent message = event.getMessage();
-        handleTextContent(event.getReplyToken(), event, message);
+
+        log.info("TextMessageContent is called");
+
+        textMessageService.fetchReplyTextMessage(message.getText());
+
+        if (textMessageService.getReplyFlg()) {
+            log.info("replyFlg is true");
+
+            String replyText = textMessageService.getReplyMessage();
+            List<Message> replyMessage = singletonList(new TextMessage(replyText));
+            String replyToken = event.getReplyToken();
+
+            log.info("Returns echo message {}: {}", replyToken, replyText);
+
+            boolean notificationDisabled = false;
+            try {
+                BotApiResponse apiResponse = lineMessagingClient
+                        .replyMessage(new ReplyMessage(replyToken, replyMessage, notificationDisabled))
+                        .get();
+                log.info("Sent messages: {}", apiResponse);
+            } catch (InterruptedException | ExecutionException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 
     @EventMapping

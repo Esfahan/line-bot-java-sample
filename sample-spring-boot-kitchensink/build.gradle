@@ -20,4 +20,7 @@ dependencies {
     implementation project(':line-bot-spring-boot')
     implementation "org.springframework.boot:spring-boot-starter-web"
     implementation 'com.google.guava:guava'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.flywaydb:flyway-core'
+    runtimeOnly 'org.postgresql:postgresql'
 }
