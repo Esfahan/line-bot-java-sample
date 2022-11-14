@@ -31,7 +31,7 @@ buildscript {
         maven { url 'https://repo.spring.io/plugins-release' }
     }
     dependencies {
-        classpath 'com.github.ben-manes:gradle-versions-plugin:0.41.0'
+        classpath 'com.github.ben-manes:gradle-versions-plugin:0.44.0'
         classpath 'com.puppycrawl.tools:checkstyle:9.0'
         classpath 'gradle.plugin.com.github.spotbugs.snom:spotbugs-gradle-plugin:4.7.3'
         classpath 'io.franzbecker:gradle-lombok:4.0.0'
